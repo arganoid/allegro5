@@ -70,6 +70,8 @@ typedef struct JOYSTICK_INFO
    int num_buttons;
    JOYSTICK_STICK_INFO stick[MAX_JOYSTICK_STICKS];
    JOYSTICK_BUTTON_INFO button[MAX_JOYSTICK_BUTTONS];
+   char const* product_name;
+   char const* instance_name;
 } JOYSTICK_INFO;
 
 

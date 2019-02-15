@@ -237,6 +237,9 @@ int win_add_joystick(WINDOWS_JOYSTICK_INFO *win_joy)
    for (n_but = 0; n_but < joy[num_joysticks].num_buttons; n_but++)
       joy[num_joysticks].button[n_but].name = (win_joy->button_name[n_but] ? win_joy->button_name[n_but] : name_b[n_but]);
 
+   joy[num_joysticks].product_name = win_joy->product_name;
+   joy[num_joysticks].instance_name = win_joy->instance_name;
+
    num_joysticks++;
 
    return 0;

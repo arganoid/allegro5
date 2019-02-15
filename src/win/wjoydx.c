@@ -408,6 +408,9 @@ static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pv
    if (FAILED(hr))
       goto Error;
 
+   dinput_joystick[dinput_joy_num].product_name = _al_ustrdup(lpddi->tszProductName);
+   dinput_joystick[dinput_joy_num].instance_name = _al_ustrdup(lpddi->tszInstanceName);
+   
    /* register this joystick */
    dinput_joystick[dinput_joy_num].device = dinput_device;
    if (win_add_joystick((WINDOWS_JOYSTICK_INFO *)&dinput_joystick[dinput_joy_num]) != 0)

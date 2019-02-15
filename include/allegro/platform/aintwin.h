@@ -146,7 +146,9 @@ AL_FUNC(int, mouse_set_sysmenu, (int state));
    char *hat_name;                           \
    int num_buttons;                          \
    int button[MAX_JOYSTICK_BUTTONS];         \
-   char *button_name[MAX_JOYSTICK_BUTTONS];
+   char *button_name[MAX_JOYSTICK_BUTTONS]; \
+   char const* product_name; \
+   char const* instance_name;
 
 typedef struct WINDOWS_JOYSTICK_INFO {
    WINDOWS_JOYSTICK_INFO_MEMBERS

@@ -29,7 +29,7 @@
 #define JOY_TYPE_NONE            0
 
 
-#define MAX_JOYSTICKS            8
+#define MAX_JOYSTICKS            128
 #define MAX_JOYSTICK_AXIS        3
 #define MAX_JOYSTICK_STICKS      5
 #define MAX_JOYSTICK_BUTTONS     32

@@ -29,7 +29,7 @@
 #define JOY_TYPE_NONE            0
 
 
-#define MAX_JOYSTICKS            8
+#define MAX_JOYSTICKS            128
 #define MAX_JOYSTICK_AXIS        3
 #define MAX_JOYSTICK_STICKS      5
 #define MAX_JOYSTICK_BUTTONS     32
@@ -70,6 +70,8 @@ typedef struct JOYSTICK_INFO
    int num_buttons;
    JOYSTICK_STICK_INFO stick[MAX_JOYSTICK_STICKS];
    JOYSTICK_BUTTON_INFO button[MAX_JOYSTICK_BUTTONS];
+   char const* product_name;
+   char const* instance_name;
 } JOYSTICK_INFO;
 
 

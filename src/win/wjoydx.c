@@ -25,6 +25,8 @@
 #include "allegro/internal/aintern.h"
 #include "allegro/platform/aintwin.h"
 
+//#include <stdio.h>
+
 #ifndef SCAN_DEPEND
    #ifdef ALLEGRO_MINGW32
       #undef MAKEFOURCC
@@ -123,6 +125,17 @@ int joystick_dinput_acquire(void)
 
    if (joystick_dinput) {
       for (i=0; i<dinput_joy_num; i++) {
+#if 0
+          // 6/8/2020 Application Verifier shows msg below, but debug code shows handle isn't null
+          // VERIFIER STOP 00000303: pid 0x6760: NULL handle passed as parameter. A valid handle must be used. 
+          // also re-enable stdio.h
+          static char buf[1024];
+          sprintf(buf, "%d\n", i);
+          OutputDebugString(buf);
+          sprintf(buf, "%d\n", (int)(dinput_joystick[i].device));
+          OutputDebugString(buf);
+#endif
+
          hr = IDirectInputDevice2_Acquire(dinput_joystick[i].device);
 
          if (FAILED(hr))

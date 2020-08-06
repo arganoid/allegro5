@@ -25,7 +25,7 @@ SAMPLE* logg_load(const char* filename)
 	int bitstream;
 	char *buf = malloc(logg_bufsize);
 
-	file = fopen(filename, "rb");
+	auto err = fopen_s(&file, filename, "rb");
 	if (!file) {
 		uszprintf(allegro_error, ALLEGRO_ERROR_SIZE, "Unable to open file: %s", filename);
 		free(buf);
@@ -33,7 +33,7 @@ SAMPLE* logg_load(const char* filename)
 	}
 
 	if (ov_open_callbacks(file, &ovf, 0, 0, OV_CALLBACKS_DEFAULT) != 0) {
-		strncpy(allegro_error, "ov_open_callbacks failed.", ALLEGRO_ERROR_SIZE);
+		strcpy_s(allegro_error, ALLEGRO_ERROR_SIZE, "ov_open_callbacks failed.");
 		fclose(file);
 		free(buf);
 		return 0;
@@ -85,14 +85,14 @@ static int logg_open_file_for_streaming(LOGG_Stream* s)
 	FILE* file;
 	vorbis_info* vi;
 
-	file = fopen(s->filename, "rb");
+	auto err = fopen_s(&file, s->filename, "rb");
 	if (!file) {
 		uszprintf(allegro_error, ALLEGRO_ERROR_SIZE, "Unable to open file: %s", s->filename);
 		return 1;
 	}
 
 	if (ov_open_callbacks(file, &s->ovf, 0, 0, OV_CALLBACKS_DEFAULT) != 0) {
-		strncpy(allegro_error, "ov_open_callbacks failed.", ALLEGRO_ERROR_SIZE);
+		strcpy_s(allegro_error, ALLEGRO_ERROR_SIZE, "ov_open_callbacks failed.");
 		fclose(file);
 		return 1;
 	}
@@ -179,7 +179,7 @@ LOGG_Stream* logg_get_stream(const char* filename, int volume, int pan, int loop
 		return 0;
 	}
 
-	s->filename = strdup(filename);
+	s->filename = _strdup(filename);
 
 	if (!s->filename) {
 		free(s);

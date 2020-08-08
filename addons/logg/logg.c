@@ -236,6 +236,8 @@ void logg_stop_stream(LOGG_Stream* s)
 	int i;
 
 	stop_audio_stream(s->audio_stream);
+	s->audio_stream = NULL;
+
 	for (i = 0; i < OGG_PAGES_TO_BUFFER; i++) {
 		free(s->buf[i]);
 		s->buf[i] = 0;
@@ -253,14 +255,19 @@ void logg_destroy_stream(LOGG_Stream* s)
 
 	if (s->audio_stream) {
 		stop_audio_stream(s->audio_stream);
+		s->audio_stream = NULL;
 	}
 	ov_clear(&s->ovf);
 	for (i = 0; i < OGG_PAGES_TO_BUFFER; i++) {
 		if (s->buf[i]) {
 			free(s->buf[i]);
+			s->buf[i] = NULL;
 		}
 	}
+
 	free(s->filename);
+	s->filename = NULL;
+
 	free(s);
 }
 

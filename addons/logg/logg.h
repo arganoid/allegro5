@@ -41,6 +41,7 @@ AOGG_FUNC(int, logg_update_stream,(LOGG_Stream* s));
 AOGG_FUNC(void, logg_destroy_stream,(LOGG_Stream* s));
 AOGG_FUNC(void, logg_stop_stream,(LOGG_Stream* s));
 AOGG_FUNC(int, logg_restart_stream,(LOGG_Stream* s));
+AOGG_FUNC(int, logg_get_voice,(LOGG_Stream* s));
 
 #ifdef __cplusplus
 }

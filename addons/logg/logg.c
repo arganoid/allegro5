@@ -264,3 +264,8 @@ void logg_destroy_stream(LOGG_Stream* s)
 	free(s);
 }
 
+int logg_get_voice(LOGG_Stream* s)
+{
+	// todo this is not valid if not playing
+	return s->audio_stream->voice;
+}

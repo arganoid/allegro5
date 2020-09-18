@@ -47,7 +47,7 @@ static const char *technique_source_vertex =
    "{\n"
    "   pass p1\n"
    "   {\n"
-   "      VertexShader = compile vs_2_0 vs_main();\n"
+   "      VertexShader = compile vs_3_0 vs_main();\n"
    "      PixelShader = null;\n"
    "   }\n"
    "}\n";
@@ -58,7 +58,7 @@ static const char *technique_source_pixel =
    "   pass p1\n"
    "   {\n"
    "      VertexShader = null;\n"
-   "      PixelShader = compile ps_2_0 ps_main();\n"
+   "      PixelShader = compile ps_3_0 ps_main();\n"
    "   }\n"
    "}\n\n";
 
@@ -67,8 +67,8 @@ static const char *technique_source_both =
    "{\n"
    "   pass p1\n"
    "   {\n"
-   "      VertexShader = compile vs_2_0 vs_main();\n"
-   "      PixelShader = compile ps_2_0 ps_main();\n"
+   "      VertexShader = compile vs_3_0 vs_main();\n"
+   "      PixelShader = compile ps_3_0 ps_main();\n"
    "   }\n"
    "}\n";
 

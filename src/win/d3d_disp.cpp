@@ -806,6 +806,10 @@ static bool d3d_create_device(ALLEGRO_DISPLAY_D3D *d,
    }
    d3d_pp.hDeviceWindow = win_display->window;
 
+   if (!refresh_rate) {
+      al_display->refresh_rate = d3d_get_default_refresh_rate(win_display->adapter);
+   }
+
    if (adapter < 0)
       adapter = 0;
 
@@ -1857,7 +1861,7 @@ static ALLEGRO_DISPLAY *d3d_create_display(int w, int h)
    s[ALLEGRO_SUPPORT_NPOT_BITMAP] = al_have_d3d_non_pow2_texture_support();
    s[ALLEGRO_CAN_DRAW_INTO_BITMAP] = render_to_texture_supported;
 
-#ifdef ALLEGRO_CFG_SHADER_HLSL
+#ifdef ALLEGRO_CFG_D3DX9
    _al_load_d3dx9_module();
 #endif
 
@@ -2650,7 +2654,7 @@ void _al_d3d_shutdown_display(void)
    FreeLibrary(_al_d3d_module);
    _al_d3d_module = NULL;
 
-#ifdef ALLEGRO_CFG_SHADER_HLSL
+#ifdef ALLEGRO_CFG_D3DX9
    _al_unload_d3dx9_module();
 #endif
 

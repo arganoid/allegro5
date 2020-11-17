@@ -100,7 +100,7 @@ static void _handle_key_press(ALLEGRO_DISPLAY* dpy, int unicode, int scancode,
          event.keyboard.display   = dpy;
          event.keyboard.keycode   = scancode;
          event.keyboard.unichar   = 0;
-         event.keyboard.modifiers = 0;
+         event.keyboard.modifiers = modifiers;
          event.keyboard.repeat    = false;
          if (!is_repeat) {
             _al_event_source_emit_event(&keyboard.es, &event);
@@ -126,7 +126,7 @@ static void _handle_key_press(ALLEGRO_DISPLAY* dpy, int unicode, int scancode,
 
 
 
-static void _handle_key_release(ALLEGRO_DISPLAY* dpy, int scancode)
+static void _handle_key_release(ALLEGRO_DISPLAY* dpy, int modifiers, int scancode)
 {
    _al_event_source_lock(&keyboard.es);
    {
@@ -138,7 +138,7 @@ static void _handle_key_release(ALLEGRO_DISPLAY* dpy, int scancode)
          event.keyboard.display   = dpy;
          event.keyboard.keycode   = scancode;
          event.keyboard.unichar   = 0;
-         event.keyboard.modifiers = 0;
+         event.keyboard.modifiers = modifiers;
          _al_event_source_emit_event(&keyboard.es, &event);
       }
    }
@@ -262,10 +262,11 @@ void _al_osx_keyboard_handler(int pressed, NSEvent *event, ALLEGRO_DISPLAY* dpy)
     * lock is on (ie, letters are upper case)
     */
    int scancode = mac_to_scancode[[event keyCode]];
+   
+   /* Translate OS X modifier flags to Allegro modifier flags */
+   int key_shifts = translate_modifier_flags([event modifierFlags]);
 
-   if (pressed) {
-      /* Translate OS X modifier flags to Allegro modifier flags */
-      int key_shifts = translate_modifier_flags([event modifierFlags]);
+   if (pressed) {     
       NSString* raw_characters = [event charactersIgnoringModifiers];
       NSString* upper_characters = [event characters];
       const unichar raw_character = ([raw_characters length] > 0) ? [raw_characters characterAtIndex: 0] : 0;
@@ -278,7 +279,7 @@ void _al_osx_keyboard_handler(int pressed, NSEvent *event, ALLEGRO_DISPLAY* dpy)
          _handle_key_press(dpy, upper_character, scancode, key_shifts, is_repeat);
    }
    else {
-      _handle_key_release(dpy, scancode);
+      _handle_key_release(dpy, key_shifts, scancode);
    }
 }
 
@@ -303,14 +304,15 @@ void _al_osx_keyboard_modifiers(unsigned int modifiers, ALLEGRO_DISPLAY* dpy)
             _handle_key_press(dpy, -1, mod_info[i][2], key_shifts, false);
             if (i == 0) {
                /* Caps lock requires special handling */
-               _handle_key_release(dpy, mod_info[0][2]);
+               _handle_key_release(dpy, key_shifts, mod_info[0][2]);
             }
          }
          else {
             if (i == 0) {
                _handle_key_press(dpy, -1, mod_info[0][2], key_shifts, false);
             }
-            _handle_key_release(dpy, mod_info[i][2]);
+            
+            _handle_key_release(dpy, key_shifts, mod_info[i][2]);
          }
       }
    }

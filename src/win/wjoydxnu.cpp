@@ -824,6 +824,8 @@ static bool dinput_is_device_xinput(const GUID *guid)
  */
 static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
 {
+   ALLEGRO_DEBUG("joystick_enum_callback\n");
+
    DIPROPRANGE property_range =
    {
       /* the header */
@@ -962,6 +964,8 @@ static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pv
    /* create a thread event for this joystick, unless it was already created */
    joy->waker_event = CreateEvent(NULL, false, false, NULL);
 
+   ALLEGRO_DEBUG("waker_event: %x\n", joy->waker_event);
+
    /* tell the joystick background thread to wake up when this joystick
     * device's state changes
     */
@@ -990,6 +994,8 @@ static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pv
          goto Error;
       }
 
+      ALLEGRO_DEBUG("waker_event2: %x\n", joy->waker_event);
+
       {
          LARGE_INTEGER due_time;
          due_time.HighPart = 0;
@@ -1008,6 +1014,8 @@ static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pv
    return DIENUM_CONTINUE;
 
  Error:
+
+   ALLEGRO_DEBUG("error");
 
    if (dinput_device)
       IDirectInputDevice8_Release(dinput_device);
@@ -1427,8 +1435,11 @@ static unsigned __stdcall joydx_thread_proc(LPVOID unused)
             HANDLE waker = JOYSTICK_WAKER(waker_num);
             unsigned i;
 
+            ALLEGRO_DEBUG("waker_num = %d, handle = %x\n", waker_num, waker);
+
             for (i = 0; i < MAX_JOYSTICKS; i++) {
                if (waker == joydx_joystick[i].waker_event) {
+                  ALLEGRO_DEBUG("update %d\n", i);
                   update_joystick(&joydx_joystick[i]);
                   break;
                }
@@ -1457,6 +1468,8 @@ static unsigned __stdcall joydx_thread_proc(LPVOID unused)
  */
 static void update_joystick(ALLEGRO_JOYSTICK_DIRECTX *joy)
 {
+   ALLEGRO_DEBUG("%x\n", joy);
+
    DIDEVICEOBJECTDATA buffer[DEVICE_BUFFER_SIZE];
    DWORD num_items = DEVICE_BUFFER_SIZE;
    HRESULT hr;
@@ -1607,6 +1620,8 @@ static void handle_pov_event(ALLEGRO_JOYSTICK_DIRECTX *joy, int stick, DWORD _va
  */
 static void handle_button_event(ALLEGRO_JOYSTICK_DIRECTX *joy, int button, bool down)
 {
+   ALLEGRO_DEBUG("%x, %d\n", joy, button);
+
    if (button < 0 && button >= joy->parent.info.num_buttons)
       return;
 

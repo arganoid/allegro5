@@ -166,7 +166,7 @@ bool al_use_shader(ALLEGRO_SHADER *shader)
    if (shader) {
       if (shader->vt->use_shader(shader, disp, true)) {
          _al_set_bitmap_shader_field(bmp, shader);
-         ALLEGRO_DEBUG("use_shader succeeded\n");
+         //ALLEGRO_DEBUG("use_shader succeeded\n");
          return true;
       }
       else {
@@ -207,7 +207,7 @@ void al_destroy_shader(ALLEGRO_SHADER *shader)
     */
    bmp = al_get_target_bitmap();
    if (bmp && _al_vector_contains(&shader->bitmaps, &bmp)) {
-      ALLEGRO_DEBUG("implicitly unusing shader on target bitmap\n");
+      //ALLEGRO_DEBUG("implicitly unusing shader on target bitmap\n");
       al_use_shader(NULL);
    }
 

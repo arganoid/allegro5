@@ -1075,19 +1075,24 @@ static bool joydx_scan(bool configure)
    HRESULT hr;
    unsigned i;
 
+   ALLEGRO_DEBUG("\n");
+
    /* Clear mark bits. */
    for (i = 0; i < MAX_JOYSTICKS; i++)
       joydx_joystick[i].marked = false;
 
    /* enumerate the joysticks attached to the system */
+   ALLEGRO_DEBUG("Calling IDirectInput8_EnumDevices\n");
    hr = IDirectInput8_EnumDevices(joystick_dinput, DI8DEVCLASS_GAMECTRL,
       joystick_enum_callback, NULL, DIEDFL_ATTACHEDONLY);
    if (FAILED(hr)) {
       /* XXX will this ruin everything? */
+      ALLEGRO_DEBUG("FAILED(hr)\n");
       IDirectInput8_Release(joystick_dinput);
       joystick_dinput = NULL;
       return false;
    }
+   ALLEGRO_DEBUG("Completed IDirectInput8_EnumDevices\n");
 
    /* Schedule unmarked structures to be inactivated. */
    for (i = 0; i < MAX_JOYSTICKS; i++) {

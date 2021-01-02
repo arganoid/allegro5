@@ -972,9 +972,14 @@ static BOOL CALLBACK joystick_enum_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pv
    hr = IDirectInputDevice8_SetEventNotification(joy->device, joy->waker_event);
 
    if (FAILED(hr)) {
+      char* error = dinput_err_str(hr);
       ALLEGRO_ERROR("SetEventNotification failed for joystick %d: %s\n",
-         num, dinput_err_str(hr));
-      goto Error;
+         num, error);
+      // Steam Remote Play hack
+      if (strcmp(error, "unknown error") == 0)
+         hr = DI_POLLEDDEVICE;
+      else
+         goto Error;
    }
 
    if (hr == DI_POLLEDDEVICE) {
@@ -1428,10 +1433,10 @@ static unsigned __stdcall joydx_thread_proc(LPVOID unused)
       {
          /* handle hot plugging */
          if (al_get_time() > last_update+1 || result == WAIT_TIMEOUT) {
-            if (need_device_enumeration) {
+            //if (need_device_enumeration) {
               joydx_scan(true);
               need_device_enumeration = false;
-            }
+            //}
             last_update = al_get_time();
          }
 

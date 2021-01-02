@@ -994,6 +994,11 @@ static LRESULT CALLBACK window_callback(HWND hWnd, UINT message,
         }
         break;
       case WM_DEVICECHANGE:
+         ALLEGRO_DEBUG("WM_DEVICECHANGE\n");
+        _al_win_joystick_dinput_trigger_enumeration();
+        break;
+      case WM_INPUT_DEVICE_CHANGE:
+         ALLEGRO_DEBUG("WM_INPUT_DEVICE_CHANGE\n");
         _al_win_joystick_dinput_trigger_enumeration();
         break;
    }
@@ -1021,6 +1026,30 @@ int _al_win_init_window()
       _al_win_msg_call_proc = RegisterWindowMessage(TEXT("Allegro call proc"));
       _al_win_msg_suicide = RegisterWindowMessage(TEXT("Allegro window suicide"));
    }
+
+#if 1
+   // Register for WM_INPUT_DEVICE_CHANGE (needed for Steam Remote Play)
+   // HID usage numbers:
+   // https://docs.microsoft.com/en-us/windows-hardware/drivers/hid/hid-architecture#hid-clients-supported-in-windows
+   // https://www.usb.org/sites/default/files/documents/hut1_12v2.pdf page 26
+   RAWINPUTDEVICE Rid[2];
+
+   Rid[0].usUsagePage = 0x01;
+   Rid[0].usUsage = 0x05;        // adds game pad
+   Rid[0].dwFlags = RIDEV_DEVNOTIFY;                 
+   Rid[0].hwndTarget = 0;
+
+   Rid[1].usUsagePage = 0x01;
+   Rid[1].usUsage = 0x04;        // adds joystick
+   Rid[1].dwFlags = RIDEV_DEVNOTIFY;                 
+   Rid[1].hwndTarget = 0;
+
+   ALLEGRO_DEBUG("Calling RegisterRawInputDevices\n");
+   if (RegisterRawInputDevices(Rid, 2, sizeof(Rid[0])) == FALSE) {
+      //registration failed. Call GetLastError for the cause of the error.
+      ALLEGRO_ERROR("RegisterRawInputDevices failed\n");
+   }
+#endif
 
    return true;
 }
